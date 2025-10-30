@@ -469,6 +469,7 @@ class Boards implements ActionInterface
 				'redirect' => '',
 				'category' => (int) $_REQUEST['cat'],
 				'no_children' => true,
+				'options' => [],
 			]);
 		} else {
 			// Just some easy shortcuts.
@@ -649,6 +650,9 @@ class Boards implements ActionInterface
 		if (isset($_POST['edit']) || isset($_POST['add'])) {
 			$boardOptions = [];
 
+			// The board options are in a league of their own.
+			$boardOptions['options'] = [];
+
 			// Move this board to a new category?
 			if (!empty($_POST['new_cat'])) {
 				$boardOptions['move_to'] = 'bottom';
@@ -715,6 +719,7 @@ class Boards implements ActionInterface
 
 			// Are they doing redirection?
 			$boardOptions['redirect'] = !empty($_POST['redirect_enable']) && isset($_POST['redirect_address']) && trim($_POST['redirect_address']) != '' ? (string) new Url(trim($_POST['redirect_address']), true) : '';
+			$boardOptions['options']['redirect_new_tab'] = !empty($_POST['redirect_enable']) && !empty($_POST['redirect_address_new_tab']);
 
 			// Profiles...
 			$boardOptions['profile'] = $_POST['profile'] == -1 ? 1 : $_POST['profile'];
@@ -736,6 +741,7 @@ class Boards implements ActionInterface
 				// If we're turning redirection on check the board doesn't have posts in it - if it does don't make it a redirection board.
 				if ($boardOptions['redirect'] && empty($oldRedirect) && $numPosts) {
 					unset($boardOptions['redirect']);
+					unset($boardOptions['options']['redirect_new_tab']);
 				}
 				// Reset the redirection count when switching on/off.
 				elseif (empty($boardOptions['redirect']) != empty($oldRedirect)) {

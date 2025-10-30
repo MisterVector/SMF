@@ -421,7 +421,7 @@ function template_bi_redirect_icon($board)
 function template_bi_board_info($board)
 {
 	echo '
-		<a class="subject mobile_subject" href="', $board['href'], '" id="b', $board['id'], '">
+		<a class="subject mobile_subject" href="', $board['href'], '" ', (!empty($board['redirect']) && !empty($board['options']['redirect_new_tab']) ? 'target="_blank"' : '') ,' id="b', $board['id'], '">
 			', $board['name'], '
 		</a>';
 
@@ -494,6 +494,7 @@ function template_bi_board_children($board)
 			id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
 		foreach ($board['children'] as $child)
 		{
+			// VECTOR TODO: Come back to this
 			if (!$child['is_redirect'])
 				$child['link'] = '' . ($child['new'] ? '<a href="' . Config::$scripturl . '?action=unread;board=' . $child['id'] . '" title="' . Lang::getTxt('new_posts_stats', ['posts' => $child['posts'], 'topics' => $child['topics']], file: 'General') . '" class="new_posts">' . Lang::getTxt('new', file: 'General') . '</a> ' : '') . '<a href="' . $child['href'] . '" ' . ($child['new'] ? 'class="board_new_posts" ' : '') . 'title="' . Lang::getTxt($child['new'] ? 'new_posts_stats' : 'old_posts_stats', ['posts' => $child['posts'], 'topics' => $child['topics']], file: 'General') . '">' . $child['name'] . '</a>';
 			else

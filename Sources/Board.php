@@ -320,6 +320,13 @@ class Board implements \ArrayAccess, Routable
 	public bool $new = false;
 
 	/**
+	 * @var array
+	 * 
+	 * Options that are defined for the board.
+	 */
+	public array $options = [];
+
+	/**
 	 * @var string
 	 *
 	 * What error (if any) was encountered while loading this board.
@@ -449,6 +456,7 @@ class Board implements \ArrayAccess, Routable
 			'count_posts',
 			'cur_topic_approved',
 			'cur_topic_starter',
+			'options',
 		],
 	];
 
@@ -1237,6 +1245,7 @@ class Board implements \ArrayAccess, Routable
 		$board->moderator_groups = $boardOptions['moderator_groups'] ?? $board->moderator_groups;
 		$board->member_groups = $boardOptions['access_groups'] ?? $board->member_groups;
 		$board->deny_groups = $boardOptions['deny_groups'] ?? $board->deny_groups;
+		$board->options = $boardOptions['options'] ?? $board->options;
 
 		// There's an integration hook called in Board::save() that wants to know this.
 		$board->custom['boardOptions'] = $boardOptions;
@@ -1954,6 +1963,7 @@ class Board implements \ArrayAccess, Routable
 					'id_cat',
 					'id_last_msg',
 					'board_order',
+					'options',
 				],
 			));
 
@@ -2288,6 +2298,10 @@ class Board implements \ArrayAccess, Routable
 								$prop['deny_groups'] = $value == '' ? [] : array_filter(explode(',', $value), 'strlen');
 								break;
 
+							case 'options':
+								$prop['options'] = json_decode($row['options']);
+								break;
+
 							default:
 								$props[$key] = is_numeric($value) ? $value + 0 : $value;
 								break;
@@ -2477,6 +2491,7 @@ class Board implements \ArrayAccess, Routable
 			'unapproved_topics' => 'int',
 			'redirect' => 'string-255',
 			'deny_member_groups' => 'string-255',
+			'options' => 'string',
 		];
 
 		$params = [
@@ -2499,6 +2514,7 @@ class Board implements \ArrayAccess, Routable
 			$this->unapproved_topics,
 			$this->redirect,
 			implode(',', $groups['deny_groups']),
+			json_encode($this->options),
 		];
 
 		$this->id = Db::$db->insert(
@@ -2594,6 +2610,7 @@ class Board implements \ArrayAccess, Routable
 					'id_theme = {int:board_theme}',
 					'override_theme = {int:override_theme}',
 					'redirect = {string:redirect}',
+					'options = {string:options}',
 				],
 			);
 
@@ -2611,6 +2628,7 @@ class Board implements \ArrayAccess, Routable
 					'board_theme' => $this->theme,
 					'override_theme' => (int) $this->override_theme,
 					'redirect' => $this->redirect,
+					'options' => json_encode($this->options),
 				],
 			);
 

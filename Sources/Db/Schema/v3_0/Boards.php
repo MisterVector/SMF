@@ -194,6 +194,14 @@ class Boards extends Table
 				not_null: true,
 				default: '',
 			),
+			// VECTOR TODO: Change to something better if possible
+			'options' => new Column(
+				name: 'options',
+				type: 'varchar',
+				size: 512,
+				not_null: true,
+				default: '[]',
+			), 
 		];
 
 		$this->indexes = [

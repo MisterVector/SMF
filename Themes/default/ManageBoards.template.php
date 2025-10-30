@@ -483,6 +483,16 @@ function template_modify_board()
 							<input type="text" name="redirect_address" value="', Utils::$context['board']['redirect'], '" size="40">
 						</dd>
 					</dl>
+
+					<dl class="settings">
+						<dt>
+							<strong>', Lang::getTxt('mboards_redirect_new_tab', file: 'ManageBoards'), '</strong><br>
+							<span class="smalltext">', Lang::getTxt('mboards_redirect_new_tab_desc', file: 'ManageBoards'), '</span><br>
+						</dt>
+						<dd>
+							<input type="checkbox" name="redirect_address_new_tab" ', !empty(Utils::$context['board']['options']['redirect_new_tab']) ? 'checked' : '', ' size="40">
+						</dd>
+					</dl>
 				</div>';
 
 		if (Utils::$context['board']['redirect'])

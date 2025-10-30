@@ -261,6 +261,7 @@ class Reports implements ActionInterface
 			'category' => Lang::getTxt('board_category', file: 'Reports'),
 			'parent' => Lang::getTxt('board_parent', file: 'Reports'),
 			'redirect' => Lang::getTxt('board_redirect', file: 'Reports'),
+			'redirect_new_tab' => Lang::getTxt('board_redirect_new_tab', file: 'Reports'),
 			'num_topics' => Lang::getTxt('board_num_topics', file: 'Reports'),
 			'num_posts' => Lang::getTxt('board_num_posts', file: 'Reports'),
 			'count_posts' => Lang::getTxt('board_count_posts', file: 'Reports'),
@@ -292,6 +293,7 @@ class Reports implements ActionInterface
 
 			if (empty($board->redirect)) {
 				unset($this_boardSettings['redirect']);
+				unset($this_boardSettings['redirect_new_tab']);
 			}
 
 			// First off, add in the side key.
@@ -302,6 +304,7 @@ class Reports implements ActionInterface
 				'category' => $board->cat->name,
 				'parent' => $board->parent == 0 ? Lang::getTxt('none', file: 'General') : Board::$loaded[$board->parent]->name,
 				'redirect' => $board->redirect,
+				'redirect_new_tab' => Lang::getTxt(!empty($board->redirect) && !empty($board->options['redirect_new_tab']) ? 'Yes' : 'No', file: 'General'),
 				'num_posts' => $board->posts,
 				'num_topics' => $board->topics,
 				'count_posts' => Lang::getTxt(empty($board->count_posts) ? 'yes' : 'no', file: 'General'),
@@ -341,6 +344,7 @@ class Reports implements ActionInterface
 
 			if (empty($board->redirect)) {
 				unset($boardData['redirect']);
+				unset($boardData['redirect_new_tab']);
 			}
 
 			// Next add the main data.
